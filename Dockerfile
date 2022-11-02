@@ -89,6 +89,9 @@ EXPOSE 5432
 ENV PGDATA=/data
 ENV PGOPTIONS="--search_path=demo_cdm"
 
+# copy the concept recommended csv data file into the container image for Atlas Phoebe recommendations function
+COPY ./concept_recommended.csv.gz /tmp/concept_recommended.csv.gz
+
 # copy the atlas demo cdm csv data files into the container image
 RUN mkdir /tmp/atlas_demo_csv_files
 COPY ./demo_cdm_csv_files/*.csv /tmp/demo_cdm_csv_files/
@@ -103,6 +106,12 @@ COPY ./020_omop_cdm_postgresql_ddl.sql /docker-entrypoint-initdb.d/020_omop_cdm_
 
 # 030 - create empty achilles tables in the atlas demo_cdm_results schema
 COPY ./030_achilles_postgresql_ddl.sql /docker-entrypoint-initdb.d/030_achilles_postgresql_ddl.sql
+
+# 035 - create concept_recommended table in the atlas demo_cdm schema for Atlas Phoebe recommendations functionality
+COPY ./035_concept_recommended.ddl.sql /docker-entrypoint-initdb.d/035_concept_recommended.ddl.sql
+
+# 037 - load concept recommended csv data into the atlas demo_cdm schema concept_recommended table 
+COPY ./037_load_concept_recommended_data.sql /docker-entrypoint-initdb.d/037_load_concept_recommended_data.sql
 
 # 040 - load atlas demo cdm csv data into the atlas demo_cdm schema tables & achilles data into atlas demo_cdm_results schema achilles tables
 COPY ./040_load_demo_cdm_data.sql /docker-entrypoint-initdb.d/040_load_demo_cdm_data.sql
