@@ -94,7 +94,7 @@ COPY ./concept_recommended.csv.gz /tmp/concept_recommended.csv.gz
 
 # copy the atlas demo cdm csv data files into the container image
 RUN mkdir /tmp/atlas_demo_csv_files
-COPY ./demo_cdm_csv_files/*.csv /tmp/demo_cdm_csv_files/
+COPY ./demo_cdm_csv_files/*.csv.gz /tmp/demo_cdm_csv_files/
 
 # copy the below SQL files into the container image - postgresql database will automatically run them in this sequence when it starts up
 
