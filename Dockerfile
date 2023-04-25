@@ -79,7 +79,7 @@ RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl
 
 #-------------------------------------------
 
-FROM postgres:11.1-alpine as data-loader-image
+FROM postgres:15.2-alpine as data-loader-image
 
 WORKDIR /tmp
 
@@ -88,6 +88,7 @@ EXPOSE 5432
 # configure postgres database defaults
 ENV PGDATA=/data
 ENV PGOPTIONS="--search_path=demo_cdm"
+ENV POSTGRES_PASSWORD=mypass
 
 # copy the concept recommended csv data file into the container image for Atlas Phoebe recommendations function
 COPY ./concept_recommended.csv.gz /tmp/concept_recommended.csv.gz
@@ -160,6 +161,7 @@ COPY ./140_load_demo_atlas_conceptset_definitions.sql /docker-entrypoint-initdb.
 RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
 RUN ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
 
-FROM postgres:11.1-alpine
+FROM postgres:15.2-alpine
+ENV POSTGRES_PASSWORD=mypass
 
 COPY --from=data-loader-image /data $PGDATA
