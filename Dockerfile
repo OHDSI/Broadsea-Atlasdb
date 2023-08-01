@@ -1,3 +1,5 @@
+ARG PASSWORD_METHOD=default
+
 FROM openjdk:8-jre-alpine as builder-image
 LABEL stage=intermediate
 
@@ -88,7 +90,6 @@ EXPOSE 5432
 # configure postgres database defaults
 ENV PGDATA=/data
 ENV PGOPTIONS="--search_path=demo_cdm"
-ENV POSTGRES_PASSWORD=mypass
 
 # copy the concept recommended csv data file into the container image for Atlas Phoebe recommendations function
 COPY ./concept_recommended.csv.gz /tmp/concept_recommended.csv.gz
@@ -157,11 +158,22 @@ COPY ./130_load_demo_atlas_cohort_definitions.sql /docker-entrypoint-initdb.d/13
 # 140 - load demo Atlas concept set definitions
 COPY ./140_load_demo_atlas_conceptset_definitions.sql /docker-entrypoint-initdb.d/140_load_sample_atlas_conceptset_definitions.sql
 
-# run the postgres entrypoint script to run the SQL scripts and load the data but do not start the postgres daemon process
 RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
+
+# Pseudo branching logic - we run 2 stages, 1 for default password auth, the other for secrets auth
+FROM data-loader-image AS use-password-default
+ENV POSTGRES_PASSWORD=mypass
 RUN ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
 
-FROM postgres:15.2-alpine
-ENV POSTGRES_PASSWORD=mypass
+FROM data-loader-image AS use-password-secret
+ENV POSTGRES_PASSWORD_FILE="/run/secrets/ATLASDB_POSTGRES_PASSWORD"
+RUN --mount=type=secret,id=ATLASDB_POSTGRES_PASSWORD \
+    ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
 
-COPY --from=data-loader-image /data $PGDATA
+# then pick the stage based on the PASSWORD_METHOD
+FROM use-password-${PASSWORD_METHOD} AS data-loader-image-final
+
+
+# run the postgres entrypoint script to run the SQL scripts and load the data but do not start the postgres daemon process
+FROM postgres:15.2-alpine
+COPY --from=data-loader-image-final /data $PGDATA
