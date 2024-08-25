@@ -81,7 +81,7 @@ RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl
 
 #-------------------------------------------
 
-FROM postgres:15.2-alpine as data-loader-image
+FROM postgres:16.4-alpine as data-loader-image
 
 WORKDIR /tmp
 
@@ -175,5 +175,5 @@ FROM use-password-${PASSWORD_METHOD} AS data-loader-image-final
 
 
 # run the postgres entrypoint script to run the SQL scripts and load the data but do not start the postgres daemon process
-FROM postgres:15.2-alpine
+FROM postgres:16.4-alpine
 COPY --from=data-loader-image-final /data $PGDATA
