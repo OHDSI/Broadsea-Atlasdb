@@ -13,8 +13,8 @@ INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, tabl
 -- VOCABULARY daimon
 INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, table_qualifier, priority) VALUES (2, 1, 1, 'demo_cdm', 10);
 
--- RESULTS daimon
-INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, table_qualifier, priority) VALUES (3, 1, 2, 'demo_cdm_results', 0);
+-- RESULTS daimon - set priority to non-zero value which will trigger Atlas WebAPI cache warming job on WebAPI startup
+INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, table_qualifier, priority) VALUES (3, 1, 2, 'demo_cdm_results', 5);
 
 -- EVIDENCE daimon - no evidence data to load in demo dataset
 -- INSERT INTO webapi.source_daimon( source_daimon_id, source_id, daimon_type, table_qualifier, priority) VALUES (4, 1, 3, 'demo_cdm_results', 0);
