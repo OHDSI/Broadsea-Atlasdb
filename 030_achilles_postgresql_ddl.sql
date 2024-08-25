@@ -128,9 +128,11 @@ CREATE INDEX idx_ard_s2
 
 CREATE TABLE achilles_result_concept_count
 (
-  concept_id character varying,
+  concept_id integer,
   record_count numeric,
-  descendant_record_count numeric
+  descendant_record_count numeric,
+  person_count numeric,
+  descendant_person_count numeric
 )
 WITH (
   OIDS=FALSE

@@ -54,6 +54,7 @@ copy achilles_analysis from PROGRAM 'gunzip -c /tmp/demo_cdm_csv_files/achilles_
 copy achilles_results from PROGRAM 'gunzip -c /tmp/demo_cdm_csv_files/achilles_results.csv.gz' with csv header;
 --copy achilles_results_derived from PROGRAM 'gunzip -c /tmp/demo_cdm_csv_files/achilles_results_derived.csv.gz' with csv header;
 copy achilles_results_dist from PROGRAM 'gunzip -c /tmp/demo_cdm_csv_files/achilles_results_dist.csv.gz' with csv header;
+copy achilles_result_concept_count from PROGRAM 'gunzip -c /tmp/demo_cdm_csv_files/achilles_result_concept_count.csv.gz' with csv header;
 --
 set search_path = demo_cdm;
 
