@@ -22,7 +22,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ env.DOCKER_IMAGE }}
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
 
@@ -34,7 +34,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}}          # Tag based on Git semantic version tag (e.g., "2.2.0")
             type=sha                                 # Tag based on commit SHA (e.g., "mycontainer:<commit-sha>")
-            type=latest                              # Static "latest" tag
+            type=raw,value=latest                    # Static "latest" tag
           labels: |
             org.opencontainers.image.version={{version}}
             org.opencontainers.image.source={{source}}
@@ -60,7 +60,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
+           
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v4
