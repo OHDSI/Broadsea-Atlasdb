@@ -1,6 +1,6 @@
 ARG PASSWORD_METHOD=default
 
-FROM openjdk:8-jre-alpine as builder-image
+FROM openjdk:8-jre-alpine AS builder-image
 LABEL stage=intermediate
 
 WORKDIR /tmp
@@ -81,7 +81,7 @@ RUN java -jar SqlRender.jar /tmp/results_ohdisql.ddl /tmp/results_postgresql.ddl
 
 #-------------------------------------------
 
-FROM postgres:16.4-alpine as data-loader-image
+FROM postgres:16.4-alpine AS data-loader-image
 
 WORKDIR /tmp
 
