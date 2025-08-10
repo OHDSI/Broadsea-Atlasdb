@@ -26,8 +26,7 @@ jobs:
         with:
           images: ${{ env.DOCKER_IMAGE }}
           tags: |
-            # Strip the leading "v" from the git tag and use the semver value (e.g., v2.2.1 -> 2.2.1)
-            type=semver,pattern={{version}},prefix=v
+            type=semver,pattern={{version}}
             # Also tag as "latest" on tagged releases
             type=raw,value=latest
 
