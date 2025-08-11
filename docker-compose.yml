@@ -1,5 +1,3 @@
-version: '2.2'
-
 volumes:
   atlasdb-postgres-data:
     name: atlasdb-postgres-data
@@ -8,10 +6,13 @@ services:
 
   broadsea-atlasdb:
     build: .
-    image: ohdsi/broadsea-atlasdb:2.2.1
+    image: ohdsi/broadsea-atlasdb:2.3.0
     container_name: broadsea-atlasdb
-    cpus: 2
-    mem_limit: "2G"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
     environment:
       - POSTGRES_PASSWORD=mypass
     ports:
